@@ -54,7 +54,7 @@ public class Bezier : MonoBehaviour
             }
         }
 
-        //printRedDots();
+        printRedDots();
         /*
         greenSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         greenSphere.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
