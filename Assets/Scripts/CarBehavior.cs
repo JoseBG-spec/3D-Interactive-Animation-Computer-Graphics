@@ -70,21 +70,21 @@ public class CarBehavior : MonoBehaviour
 
             
 
-            angle = Mathf.Atan(du.z / du.x) * Mathf.Rad2Deg;
+            angle = Mathf.Atan(-du.z / du.x) * Mathf.Rad2Deg;
             
 
             Matrix4x4 t = Transformations.TranslateM(pos.x, pos.y, pos.z);
-            Matrix4x4 r = Transformations.RotateM(-angle, Transformations.AXIS.AX_Y);
-            if (angle > 0)
+            Matrix4x4 r = Transformations.RotateM(angle, Transformations.AXIS.AX_Y);
+
+            if (angle < 95 && angle > 0)
             {
-                r = Transformations.RotateM(-angle, Transformations.AXIS.AX_Y);
+                r = Transformations.RotateM(180 + angle, Transformations.AXIS.AX_Y);
             }
-            else
+            if (angle == -90)
             {
-                r = Transformations.RotateM(angle, Transformations.AXIS.AX_Y);
+                r = Transformations.RotateM(180 + angle, Transformations.AXIS.AX_Y);
             }
-            
-            Debug.Log(-angle + " duz: " + du.z + " dux: " + du.x);
+            Debug.Log(angle + " duz: " + du.z + " dux: " + du.x);
             Matrix4x4 result = t * r;
             theCar.GetComponent<MeshFilter>().mesh.vertices = ApplyTransformation(originals, result);
 
@@ -112,11 +112,11 @@ public class CarBehavior : MonoBehaviour
             //Debug.Log(du);
 
 
-            angle = Mathf.Atan(du.z / du.x) * Mathf.Rad2Deg;
+            angle = Mathf.Atan(-du.z / du.x) * Mathf.Rad2Deg;
             Debug.Log(angle + " duz: " + du.z + " dux: " + du.x);
 
             Matrix4x4 t = Transformations.TranslateM(pos.x, pos.y, pos.z);
-            Matrix4x4 r = Transformations.RotateM(-angle, Transformations.AXIS.AX_Y);
+            Matrix4x4 r = Transformations.RotateM(angle, Transformations.AXIS.AX_Y);
 
             Matrix4x4 result = t * r;
             theCar.GetComponent<MeshFilter>().mesh.vertices = ApplyTransformation(originals, result);
