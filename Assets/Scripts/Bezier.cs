@@ -17,7 +17,7 @@ public class Bezier : MonoBehaviour
     {
         ctrl = new List<Vector3>();
         ctrl2 = new List<Vector3>();
-        //bluePoints = new List<Vector3>();
+
         movementPoints = new List<Vector3>();
 
         for (int i = 0; i < racingPoints.transform.childCount; i++)
@@ -27,24 +27,11 @@ public class Bezier : MonoBehaviour
             ctrl.Add(point.transform.position);
             ctrl2.Add(point2.transform.position);
         }
-
-        /*
-        ctrl.Add(new Vector3(0, 0, 0));
-        ctrl.Add(new Vector3(1, 5, 0));
-        ctrl.Add(new Vector3(5, 10, 0));
-        ctrl.Add(new Vector3(7, 8, 0));
-        ctrl.Add(new Vector3(10, 0, 0));
-        */
-
-        /*for(float x = 0; x < 1; x += 0.05f)
-        {
-            bluePoints.Add(EvalBezier(ctrl, x));
-        }*/
         List<Vector3> temp = new List<Vector3>();
         
         for (int i = 0; i < ctrl.Count-1; i++)
         {
-            for (float x = 0; x < 1; x += 0.001f)
+            for (float x = 0; x < 1; x += 0.01f)
             {
                 temp = new List<Vector3>();
                 temp.Add(ctrl[i]);
@@ -55,25 +42,11 @@ public class Bezier : MonoBehaviour
         }
 
         printRedDots();
-        /*
-        greenSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        greenSphere.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.green);
-        greenSphere.transform.position = ctrl[0];
-        greenSphere.transform.localScale = new Vector3(10f, 10f, 10f);*/
 
 
     }
-
-    // Update is called once per frame
     void Update()
     {
-        Car.transform.position = movementPoints[mov1];
-        mov1 += 1;
-        
-        /*if (mov1 >= 100 || mov1 <= 0)
-        {
-            dir = -dir;
-        }*/
         
         
 

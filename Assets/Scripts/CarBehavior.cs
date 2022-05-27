@@ -10,7 +10,7 @@ public class CarBehavior : MonoBehaviour
     // Start is called before the first frame update
     private Vector3 objectToLookPosition;
     public Bezier objectsToLook;
-    private int counter;
+    public int counter;
 
     public GameObject theCar;
     Vector3[] originals;
@@ -18,15 +18,17 @@ public class CarBehavior : MonoBehaviour
     public Vector3 end;
     Vector3 pos;
     float param;
+    public float angle;
 
     void Start()
     {
         originals = theCar.GetComponent<MeshFilter>().mesh.vertices;
+        objectsToLook = GameObject.Find("GameManager").GetComponent<Bezier>();
         
-        Matrix4x4 t = Transformations.TranslateM(3, 0, 0);
-        theCar.GetComponent<MeshFilter>().mesh.vertices = ApplyTransformation(originals,t);
         counter = 0;
-        objectToLook = objectsToLook.movementPoints[counter];
+        angle = 0;
+
+
     }
 
     Vector3 Interpolation(Vector3 A, Vector3 B, float t)
@@ -47,36 +49,97 @@ public class CarBehavior : MonoBehaviour
     }
     void Update()
     {
-        param += 0.0001f;
-        pos = Interpolation(start, end, param);
-        Vector3 prev = Interpolation(start, end, param - 0.00005f);
-        Vector3 dir = pos - prev;
-        Vector3 du = dir.normalized;
-
-        Matrix4x4 t = Transformations.TranslateM(pos.x, pos.y, pos.z);
-        theCar.GetComponent<MeshFilter>().mesh.vertices = ApplyTransformation(originals, t);
-
-        //Debug.Log(Time.frameCount);
-        /*if(Time.frameCount % 1000 == 0)
+        if (Input.GetKey(KeyCode.W)) 
         {
-            counter++;
-            objectToLook = objectsToLook.movementPoints[counter];
+            start = objectsToLook.movementPoints[counter];
+            end = objectsToLook.movementPoints[counter + 1];
+            param += 0.001f;
+            pos = Interpolation(start, end, param);
+
+            //Vector3 prev = Interpolation(start, end, param - 0.00005f);
+            //Debug.Log("Start");
+            //Debug.Log(start);
+            //Debug.Log("End");
+            //Debug.Log(end);
+            Vector3 dir = end - pos;
+            //Debug.Log("dir");
+            //Debug.Log(dir);
+
+            Vector3 du = dir.normalized;
+            //Debug.Log(du);
+
             
-        }*/
+
+            angle = Mathf.Atan(du.z / du.x) * Mathf.Rad2Deg;
+            
+
+            Matrix4x4 t = Transformations.TranslateM(pos.x, pos.y, pos.z);
+            Matrix4x4 r = Transformations.RotateM(-angle, Transformations.AXIS.AX_Y);
+            if (angle > 0)
+            {
+                r = Transformations.RotateM(-angle, Transformations.AXIS.AX_Y);
+            }
+            else
+            {
+                r = Transformations.RotateM(angle, Transformations.AXIS.AX_Y);
+            }
+            
+            Debug.Log(-angle + " duz: " + du.z + " dux: " + du.x);
+            Matrix4x4 result = t * r;
+            theCar.GetComponent<MeshFilter>().mesh.vertices = ApplyTransformation(originals, result);
+
+
+            //Debug.Log(Time.frameCount);
+            counter++;
+            /*if (Time.frameCount % 300 == 0)
+            {
+                angle = Mathf.Atan(du.z / du.x) * Mathf.Rad2Deg;
+                //end = objectsToLook.movementPoints[counter];
+
+            }*/
+
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            start = objectsToLook.movementPoints[counter + 1];
+            end = objectsToLook.movementPoints[counter];
+            param += 0.001f;
+            pos = Interpolation(start, end, param);
+
+            //Vector3 prev = Interpolation(start, end, param - 0.00005f);
+            Vector3 dir = end - start;
+            Vector3 du = dir.normalized;
+            //Debug.Log(du);
+
+
+            angle = Mathf.Atan(du.z / du.x) * Mathf.Rad2Deg;
+            Debug.Log(angle + " duz: " + du.z + " dux: " + du.x);
+
+            Matrix4x4 t = Transformations.TranslateM(pos.x, pos.y, pos.z);
+            Matrix4x4 r = Transformations.RotateM(-angle, Transformations.AXIS.AX_Y);
+
+            Matrix4x4 result = t * r;
+            theCar.GetComponent<MeshFilter>().mesh.vertices = ApplyTransformation(originals, result);
+
+
+            //Debug.Log(Time.frameCount);
+            counter--;
+            /*if (Time.frameCount % 300 == 0)
+            {
+                angle = Mathf.Atan(du.z / du.x) * Mathf.Rad2Deg;
+                //end = objectsToLook.movementPoints[counter];
+
+            }*/
+        }
+
     }
 
     private void FixedUpdate()
     {
-        if (objectToLook != null)
+        
+        /*if (objectToLook != null)
         {
             lookAtObject();
-        }
-    }
-
-    private void lookAtObject()
-    {
-        objectToLookPosition.y = yPos;
-        objectThatLooks.transform.LookAt(objectToLook, Vector3.up);
-        
+        }*/
     }
 }
