@@ -61,7 +61,7 @@ public class CarBehavior : MonoBehaviour
             //Debug.Log(start);
             //Debug.Log("End");
             //Debug.Log(end);
-            Vector3 dir = end - pos;
+            Vector3 dir = pos - start;
             //Debug.Log("dir");
             //Debug.Log(dir);
 
@@ -76,18 +76,18 @@ public class CarBehavior : MonoBehaviour
             Matrix4x4 t = Transformations.TranslateM(pos.x, pos.y, pos.z);
             Matrix4x4 r = Transformations.RotateM(angle, Transformations.AXIS.AX_Y);
 
-            if (angle < 95 && angle > 0)
+            /*if (angle < 95 && angle > 0)
             {
                 r = Transformations.RotateM(180 + angle, Transformations.AXIS.AX_Y);
             }
             if (angle == -90)
             {
                 r = Transformations.RotateM(180 + angle, Transformations.AXIS.AX_Y);
-            }
+            }*/
             Debug.Log(angle + " duz: " + du.z + " dux: " + du.x);
             Matrix4x4 result = t * r;
             theCar.GetComponent<MeshFilter>().mesh.vertices = ApplyTransformation(originals, result);
-
+            //theCar.GetComponent<MeshFilter>().mesh.RecalculateBounds();
 
             //Debug.Log(Time.frameCount);
             counter++;
