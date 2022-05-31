@@ -7,6 +7,7 @@ public class ParticleSystem2 : MonoBehaviour
 {
     public int N;
     List<GameObject> particles;
+    public GameObject particleObject;
     void Start()
     {
         particles = new List<GameObject>();
@@ -25,20 +26,22 @@ public class ParticleSystem2 : MonoBehaviour
     Particle3 setParticle(Particle3 p)
     {
         
-        float x = Random.Range(-5, 5);
-        float z = Random.Range(-5, 5);
-        float y = Random.Range(4.8f, 5);
-        
-        p.g = 5.81f;
-        p.r = Random.Range(0.2f, 0.4f);
-        p.rc = 0.4f;
-        p.mass = p.r * 2;
+        float x = Random.Range(87, 111);
+        float z = Random.Range(0, 8);
+        float y = Random.Range(10, 22f);
+
         p.p = new Vector3(x, y, z);
         p.forces = Vector3.zero;
-        p.forces.x = Random.Range(-1, 1);
-        p.forces.z = Random.Range(-1, 1);
-        p.dragUp = 0.000001f;
-        p.dragDown = 0.07f;
+        p.forces.x = Random.Range(-0.5f, 0.5f);
+        p.forces.z = Random.Range(-2, 2);
+        p.r = Random.Range(1f, 1.3f);
+        p.g = 9.81f;
+        p.rc = 0.1f;
+        p.mass = p.r * 2;
+        p.dragUp = 0.00000001f;
+        p.dragDown = 0.08f;
+
+        p.sph = particleObject;
 
         return p;
     }
@@ -58,8 +61,8 @@ public class ParticleSystem2 : MonoBehaviour
                     if (c)
                     {
                         Debug.Log("Choque");
-                        particle1.GetComponent<Particle3>().sph.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red);
-                        particle2.GetComponent<Particle3>().sph.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red);
+                        //particle1.GetComponent<Particle3>().sph.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red);
+                        //particle2.GetComponent<Particle3>().sph.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red);
                         p1Collision = true;
                     }
                 }
@@ -67,7 +70,7 @@ public class ParticleSystem2 : MonoBehaviour
             if (p1Collision == false)
             {
                 Debug.Log("No choque");
-                particle1.GetComponent<Particle3>().sph.GetComponent<MeshRenderer>().material.SetColor("_Color", colorp1);
+                //particle1.GetComponent<Particle3>().sph.GetComponent<MeshRenderer>().material.SetColor("_Color", colorp1);
             }
         }
     }

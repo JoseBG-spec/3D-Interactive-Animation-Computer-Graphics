@@ -84,7 +84,7 @@ public class CarBehavior : MonoBehaviour
             {
                 r = Transformations.RotateM(180 + angle, Transformations.AXIS.AX_Y);
             }*/
-            Debug.Log(angle + " duz: " + du.z + " dux: " + du.x);
+            //Debug.Log(angle + " duz: " + du.z + " dux: " + du.x);
             Matrix4x4 result = t * r;
             theCar.GetComponent<MeshFilter>().mesh.vertices = ApplyTransformation(originals, result);
             //theCar.GetComponent<MeshFilter>().mesh.RecalculateBounds();

@@ -23,14 +23,15 @@ public class Particle3 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        sph = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //sph = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sph = Instantiate(sph);
         sph.transform.position = p;
         sph.transform.localScale = new Vector3(r * 2, r * 2, r * 2);
         float cr = Random.Range(0.0f, 1.0f);
         float cg = Random.Range(0.0f, 1.0f);
         float cb = Random.Range(0.0f, 1.0f);
         color = new Color(cr, cg, cb);
-        sph.GetComponent<MeshRenderer>().material.SetColor("_Color", color);
+        //sph.GetComponent<MeshRenderer>().material.SetColor("_Color", color);
         prev = p;
         a = Vector3.zero;
         drag.y = 1;
@@ -50,13 +51,14 @@ public class Particle3 : MonoBehaviour
     {
         if (Time.frameCount > 20)
         {
-            forces.y += -g * mass * Time.deltaTime;
+            forces.y += -g * mass * 0.02f;
             if (p.y > prev.y) drag = -forces * dragUp;
             else if (p.y < prev.y) drag = -forces * dragDown;
             else drag = Vector3.zero;
             forces += drag;
             CheckFloor();
-            Verlet(Time.deltaTime);
+            //CheckCubeWalls();
+            Verlet(0.02f);
         }
     }
 
@@ -70,6 +72,50 @@ public class Particle3 : MonoBehaviour
             p.y = r;
             prev.y = r - diff;
         }
+    }
+
+    void CheckCubeWalls()
+    {
+        if (p.y > 20 - r)
+        {
+            forces.y = -forces.y * rc;
+            float diff = prev.y - p.y;
+            p.y = 15f - r;
+            prev.y = 15f - r - diff;
+        }
+
+        if (p.x > 88 - r)
+        {
+            forces.x = -forces.x * rc;
+            float diff = prev.x - p.x;
+            p.x = 7.5f - r;
+            prev.x = 7.5f - r - diff;
+        }
+        else if (p.x < 112 + r)
+        {
+            forces.x = -forces.x * rc;
+            float diff = prev.x - p.x;
+            p.x = -7.5f + r;
+            prev.x = -7.5f + r - diff;
+        }
+
+
+        if (p.z > 3 - r)
+        {
+            forces.z = -forces.z * rc;
+            float diff = prev.z - p.z;
+            p.z = 7.5f - r;
+            prev.z = 7.5f - r - diff;
+        }
+        else if (p.z < 7.3 + r)
+        {
+            forces.z = -forces.z * rc;
+            float diff = prev.z - p.z;
+            p.z = -7.5f + r;
+            prev.z = -7.5f + r - diff;
+        }
+
+
     }
 
     public bool CheckCollision(Particle3 other)
