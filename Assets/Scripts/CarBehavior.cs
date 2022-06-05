@@ -19,16 +19,39 @@ public class CarBehavior : MonoBehaviour
     Vector3 pos;
     float param;
     public float angle;
+    GameObject go;
+    Particle3 pCar;
+    private GameObject arrow;
 
     void Start()
     {
         originals = theCar.GetComponent<MeshFilter>().mesh.vertices;
         objectsToLook = GameObject.Find("GameManager").GetComponent<Bezier>();
-        
+        arrow = theCar.transform.GetChild(0).gameObject;
         counter = 0;
         angle = 0;
+        go = new GameObject();
+        go.AddComponent<Particle3>();
+        go.name = "Car";
+        pCar = go.GetComponent<Particle3>();
+        pCar = setParticle(pCar);
+        //pCar.sph = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //pCar.sph.transform.localScale = new Vector3(pCar.r * 2, pCar.r * 2, pCar.r * 2);
 
+    }
 
+    Particle3 setParticle(Particle3 p)
+    {
+        p.p = Vector3.zero;
+        p.forces = new Vector3(0, 150, 200);
+        p.r = 7.5f;
+        p.g = 0;
+        p.rc = 7.5f;
+        p.mass = p.r * 2;
+        p.dragUp = 0.00000001f;
+        p.dragDown = 0.08f;
+
+        return p;
     }
 
     Vector3 Interpolation(Vector3 A, Vector3 B, float t)
@@ -49,13 +72,22 @@ public class CarBehavior : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKey(KeyCode.W)) 
+        if(counter >= 2423)
+        {
+            counter = 0;
+        }else if (counter < 0)
+        {
+            counter = 2422;
+        }
+        if (Input.GetKey(KeyCode.K)) 
         {
             start = objectsToLook.movementPoints[counter];
             end = objectsToLook.movementPoints[counter + 1];
             param += 0.001f;
             pos = Interpolation(start, end, param);
-
+            pCar.sph.transform.position = pos;
+            pCar.p = pos;
+            arrow.transform.position = new Vector3(pos.x,arrow.transform.position.y,pos.z);
             //Vector3 prev = Interpolation(start, end, param - 0.00005f);
             //Debug.Log("Start");
             //Debug.Log(start);
@@ -87,6 +119,8 @@ public class CarBehavior : MonoBehaviour
             //Debug.Log(angle + " duz: " + du.z + " dux: " + du.x);
             Matrix4x4 result = t * r;
             theCar.GetComponent<MeshFilter>().mesh.vertices = ApplyTransformation(originals, result);
+            var mf = theCar.GetComponent<MeshFilter>();
+            mf.mesh.bounds = new Bounds(pos, new Vector3(10, 5, 1));
             //theCar.GetComponent<MeshFilter>().mesh.RecalculateBounds();
 
             //Debug.Log(Time.frameCount);
@@ -99,13 +133,15 @@ public class CarBehavior : MonoBehaviour
             }*/
 
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.L))
         {
             start = objectsToLook.movementPoints[counter + 1];
             end = objectsToLook.movementPoints[counter];
             param += 0.001f;
             pos = Interpolation(start, end, param);
-
+            pCar.sph.transform.position = pos;
+            pCar.p = pos;
+            arrow.transform.position = new Vector3(pos.x, arrow.transform.position.y, pos.z);
             //Vector3 prev = Interpolation(start, end, param - 0.00005f);
             Vector3 dir = end - start;
             Vector3 du = dir.normalized;
@@ -113,7 +149,7 @@ public class CarBehavior : MonoBehaviour
 
 
             angle = Mathf.Atan(-du.z / du.x) * Mathf.Rad2Deg;
-            Debug.Log(angle + " duz: " + du.z + " dux: " + du.x);
+            //Debug.Log(angle + " duz: " + du.z + " dux: " + du.x);
 
             Matrix4x4 t = Transformations.TranslateM(pos.x, pos.y, pos.z);
             Matrix4x4 r = Transformations.RotateM(angle, Transformations.AXIS.AX_Y);

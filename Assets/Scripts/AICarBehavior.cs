@@ -25,6 +25,9 @@ public class AICarBehavior : MonoBehaviour
 
     private int offsetCounter,sign;
 
+    GameObject go;
+    Particle3 pCar;
+    public string pName;
     void Start()
     {
         originals = theCar.GetComponent<MeshFilter>().mesh.vertices;
@@ -33,9 +36,29 @@ public class AICarBehavior : MonoBehaviour
         counter = 0;
         angle = 0;
         offsetCounter = 0;
-        sign = 1;
+        sign = 1; go = new GameObject();
+        go.AddComponent<Particle3>();
+        go.name = "AiCar" + pName;
+        pCar = go.GetComponent<Particle3>();
+        pCar = setParticle(pCar);
+        //pCar.sph = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //pCar.sph.transform.localScale = new Vector3(pCar.r * 2, pCar.r * 2, pCar.r * 2);
+
     }
 
+    Particle3 setParticle(Particle3 p)
+    {
+        p.p = Vector3.zero;
+        p.forces = new Vector3(0, 150, 200);
+        p.r = 7.5f;
+        p.g = 0;
+        p.rc = 7.5f;
+        p.mass = p.r * 2;
+        p.dragUp = 0.00000001f;
+        p.dragDown = 0.08f;
+
+        return p;
+    }
     Vector3 Interpolation(Vector3 A, Vector3 B, float t)
     {
         return A + t * (B - A);
@@ -54,6 +77,14 @@ public class AICarBehavior : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (counter >= 2423)
+        {
+            counter = 0;
+        }
+        else if (counter < 0)
+        {
+            counter = 2422;
+        }
         if (Time.frameCount > 50)
         {
             if (offsetCounter >= 8)
@@ -70,6 +101,8 @@ public class AICarBehavior : MonoBehaviour
             end.z = end.z + Random.Range(offsetz + offsetCounter, offsetz);
             param += 0.001f;
             pos = Interpolation(start, end, param);
+            pCar.sph.transform.position = pos;
+            pCar.p = pos;
 
             Vector3 dir = pos - start;
 

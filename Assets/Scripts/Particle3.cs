@@ -19,14 +19,30 @@ public class Particle3 : MonoBehaviour
     public Vector3 prev;       // previous position
     Vector3 temp;       // temporal position
     public GameObject sph;     // game object for the particle
+    public bool car =false;
 
     // Start is called before the first frame update
     void Start()
     {
         //sph = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sph = Instantiate(sph);
+        if (sph != null)
+        {
+            sph = Instantiate(sph);
+            sph.transform.localScale = new Vector3(r * 1.5f, r * 1.5f, r * 1.5f);
+        }
+        else
+        {
+            sph = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            car = true;
+            sph.transform.localScale = new Vector3(r * 2, r * 2, r * 2);
+            Material newMat = Resources.Load("ParticleTransparent", typeof(Material)) as Material;
+            sph.GetComponent<MeshRenderer>().material = newMat;
+
+        }
+
         sph.transform.position = p;
-        sph.transform.localScale = new Vector3(r * 2, r * 2, r * 2);
+        
+
         float cr = Random.Range(0.0f, 1.0f);
         float cg = Random.Range(0.0f, 1.0f);
         float cb = Random.Range(0.0f, 1.0f);
@@ -49,17 +65,21 @@ public class Particle3 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.frameCount > 20)
+        if (!car)
         {
-            forces.y += -g * mass * 0.02f;
-            if (p.y > prev.y) drag = -forces * dragUp;
-            else if (p.y < prev.y) drag = -forces * dragDown;
-            else drag = Vector3.zero;
-            forces += drag;
-            CheckFloor();
-            //CheckCubeWalls();
-            Verlet(0.02f);
+            if (Time.frameCount > 20)
+            {
+                forces.y += -g * mass * 0.02f;
+                if (p.y > prev.y) drag = -forces * dragUp;
+                else if (p.y < prev.y) drag = -forces * dragDown;
+                else drag = Vector3.zero;
+                forces += drag;
+                CheckFloor();
+                //CheckCubeWalls();
+                Verlet(0.02f);
+            }
         }
+        
     }
 
     void CheckFloor()

@@ -8,6 +8,7 @@ public class ParticleSystem2 : MonoBehaviour
     public int N;
     List<GameObject> particles;
     public GameObject particleObject;
+    List<GameObject> particles2 = new List<GameObject>();
     void Start()
     {
         particles = new List<GameObject>();
@@ -21,7 +22,8 @@ public class ParticleSystem2 : MonoBehaviour
 
             particles.Add(go);
         }
-     }
+        
+    }
 
     Particle3 setParticle(Particle3 p)
     {
@@ -34,7 +36,7 @@ public class ParticleSystem2 : MonoBehaviour
         p.forces = Vector3.zero;
         p.forces.x = Random.Range(-0.5f, 0.5f);
         p.forces.z = Random.Range(-2, 2);
-        p.r = Random.Range(1f, 1.3f);
+        p.r = Random.Range(1f, 2f);
         p.g = 9.81f;
         p.rc = 0.1f;
         p.mass = p.r * 2;
@@ -60,16 +62,39 @@ public class ParticleSystem2 : MonoBehaviour
                     bool c = particle1.GetComponent<Particle3>().CheckCollision(particle2.GetComponent<Particle3>());
                     if (c)
                     {
-                        Debug.Log("Choque");
+                        //Debug.Log("Choque");
                         //particle1.GetComponent<Particle3>().sph.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red);
                         //particle2.GetComponent<Particle3>().sph.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red);
                         p1Collision = true;
                     }
                 }
             }
+            GameObject p1Car = GameObject.Find("Car");
+            GameObject AiCar = GameObject.Find("AiCar1");
+            GameObject Ai2Car = GameObject.Find("AiCar2");
+            particles2.Add(p1Car);
+            particles2.Add(AiCar);
+            particles2.Add(Ai2Car);
+            foreach (GameObject pCar in particles2)
+            {
+                bool d = particle1.GetComponent<Particle3>().CheckCollision(pCar.GetComponent<Particle3>());
+                if (d)
+                {
+                    particle1.GetComponent<Particle3>().forces.z = pCar.GetComponent<Particle3>().forces.z;
+                    particle1.GetComponent<Particle3>().forces.y = pCar.GetComponent<Particle3>().forces.y;
+                    Debug.Log("Choque");
+                    if(pCar.name == "Car")
+                    {
+                        GameObject.Find("GameManager").GetComponent<LifePointsCar>().lifePoints -= 1;
+                    }
+                    
+                    p1Collision = true;
+                }
+            }
+            particles2.Clear();
             if (p1Collision == false)
             {
-                Debug.Log("No choque");
+                //Debug.Log("No choque");
                 //particle1.GetComponent<Particle3>().sph.GetComponent<MeshRenderer>().material.SetColor("_Color", colorp1);
             }
         }
