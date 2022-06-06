@@ -17,13 +17,13 @@ public class PlacingScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(Car1.counter > Ai1.counter && Car1.counter > Ai2.counter)
+        if(Car1.counter > Ai1.counter && Car1.counter > Ai2.counter || Car1.lap > Ai1.lap)
         {
             placeInRaceText.text = "1st";
         }else if (Car1.counter < Ai1.counter && Car1.counter > Ai2.counter || Car1.counter > Ai1.counter && Car1.counter < Ai2.counter)
         {
             placeInRaceText.text = "2nd";
-        }else if(Car1.counter < Ai1.counter && Car1.counter < Ai2.counter)
+        }else if(Car1.counter < Ai1.counter && Car1.counter < Ai2.counter || Ai1.lap > Car1.lap)
         {
             placeInRaceText.text = "3rd";
         }

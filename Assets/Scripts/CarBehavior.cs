@@ -22,9 +22,11 @@ public class CarBehavior : MonoBehaviour
     GameObject go;
     Particle3 pCar;
     private GameObject arrow;
+    public int lap;
 
     void Start()
     {
+        lap = 0;
         originals = theCar.GetComponent<MeshFilter>().mesh.vertices;
         objectsToLook = GameObject.Find("GameManager").GetComponent<Bezier>();
         arrow = theCar.transform.GetChild(0).gameObject;
@@ -75,7 +77,9 @@ public class CarBehavior : MonoBehaviour
         if(counter >= 2423)
         {
             counter = 0;
-        }else if (counter < 0)
+            lap++;
+        }
+        else if (counter < 0)
         {
             counter = 2422;
         }

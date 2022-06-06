@@ -28,8 +28,10 @@ public class AICarBehavior : MonoBehaviour
     GameObject go;
     Particle3 pCar;
     public string pName;
+    public int lap;
     void Start()
     {
+        lap=0;
         originals = theCar.GetComponent<MeshFilter>().mesh.vertices;
         objectsToLook = GameObject.Find("GameManager").GetComponent<Bezier>();
 
@@ -80,6 +82,7 @@ public class AICarBehavior : MonoBehaviour
         if (counter >= 2423)
         {
             counter = 0;
+            lap++;
         }
         else if (counter < 0)
         {

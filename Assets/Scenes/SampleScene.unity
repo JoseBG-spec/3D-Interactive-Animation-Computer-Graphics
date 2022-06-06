@@ -15287,6 +15287,7 @@ MonoBehaviour:
   start: {x: 0, y: 0, z: 0}
   end: {x: 0, y: 0, z: 0}
   angle: 0
+  lap: 0
 --- !u!4 &1165264386
 Transform:
   m_ObjectHideFlags: 0
@@ -15356,6 +15357,7 @@ MonoBehaviour:
   offsetx: 0
   offsetz: 12
   pName: 1
+  lap: 0
 --- !u!114 &1165264390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15380,6 +15382,7 @@ MonoBehaviour:
   offsetx: 0
   offsetz: -12
   pName: 2
+  lap: 0
 --- !u!114 &1165264391
 MonoBehaviour:
   m_ObjectHideFlags: 0
